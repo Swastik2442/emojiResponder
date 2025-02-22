@@ -1,0 +1,4 @@
+*.exe
+emoji_model.keras
+emoji_mapping.json
+tw_styles.css

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis with Emojis</title>
+    <link href="tw_styles.css" rel="stylesheet">
+  </head>
+  <body class="text-gray-900 dark:text-white bg-white dark:bg-gray-900">
+    <div class="w-[90vw] max-w-screen-md">
+      <h1 class="text-center text-xl mb-5 font-semibold">Sentiment Analysis with Emojis</h1>
+      <div class="relative">
+        <textarea name="text" id="text" class="block px-2.5 pb-2.5 pt-4 w-full min-h-48 max-h-[60vh] text-sm rounded-lg border-1 border-gray-300 appearance-none dark:border-gray-600 focus:border-blue-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer" placeholder=" "></textarea>
+        <label for="text" class="absolute text-sm text-gray-500 dark:text-gray-400 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 bg-white dark:bg-gray-900 top-2 z-10 px-2 start-1 duration-300 transform -translate-y-4 scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-1 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Enter the Text to Analyze</label>
+      </div>
+      <div class="flex mt-2.5">
+        <button type="submit" class="text-sm px-5 py-2.5 w-full font-medium text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 rounded-lg">Analyze</button>
+        <div id="emoji" class="size-12 flex items-center justify-center">?</div>
+      </div>
+    </div>
+    <p class="absolute right-1 bottom-1 text-xs font-thin text-gray-300 dark:text-gray-600">Made with 🩶 by Swastik</p>
+  </body>
+</html>
