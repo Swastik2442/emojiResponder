@@ -14,6 +14,6 @@ The Input is split into Train, Test & Validate Sets and is used to train a Neura
 
 ## Infrastructure
 
-The model is trained on Google Colab. The trained model is downloaded from there and uploaded to AWS S3. The uploaded model is accessed by an AWS Lambda Function which is invoked using the AWS API Gateway.
+The model is trained on Google Colab. The trained model is downloaded from there and uploaded to AWS S3. The uploaded model is accessed by an AWS Lambda Function which is invoked using its Function URL.
 
-A Webpage served from AWS S3 is used to display an interface to the User and interacts with the API Gateway to get the predicted Emoji according to the Text input by the User.
+A Webpage served from AWS S3 is used to display an interface to the User and sends requests to the Function URL to get the predicted Emoji according to the Text input by the User.
