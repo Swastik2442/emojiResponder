@@ -5,59 +5,102 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sentiment Analysis with Emojis</title>
     <link href="tw_styles.css" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❔</text></svg>">
+    <script>
+      const API_ENDPOINT = "YOUR_ENDPOINT_URL", MAX_TIMEOUT = 30000;
+      const LOADING_SVG = `<svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z" class="icon-loading"/></svg>`;
+
+      const faviconTemplate = (icon) => `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>${icon}</text></svg>`;
+    </script>
   </head>
   <body class="text-gray-900 dark:text-white bg-white dark:bg-gray-900 select-none">
     <div class="w-[90vw] max-w-screen-md">
       <h1 class="text-center text-xl mb-5 font-semibold">Sentiment Analysis with Emojis</h1>
-      <div class="relative">
-        <textarea id="text" class="block select-text px-2.5 pb-2.5 pt-4 w-full min-h-24 max-h-[60vh] text-sm rounded-lg border-1 border-gray-300 appearance-none dark:border-gray-600 focus:border-blue-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer" minlength="3" maxlength="50" placeholder=" "></textarea>
-        <label for="text" class="absolute text-sm text-gray-500 dark:text-gray-400 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 bg-white dark:bg-gray-900 top-2 z-10 px-2 start-1 duration-300 transform -translate-y-4 scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-1 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Enter the Text to Analyze</label>
+      <div class="flex items-center justify-center flex-col sm:flex-row">
+        <div class="relative w-full">
+          <textarea id="text" oninput="resetEmoji()" class="block select-text px-2.5 pb-2.5 pt-4 w-full min-h-24 max-h-[60vh] text-sm rounded-lg border-1 border-gray-300 appearance-none dark:border-gray-600 focus:border-blue-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer" minlength="3" maxlength="50" placeholder=" "></textarea>
+          <label for="text" class="absolute text-sm text-gray-500 dark:text-gray-400 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 bg-white dark:bg-gray-900 top-2 z-10 px-2 start-1 duration-300 transform -translate-y-4 scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-1 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Enter the Text to Analyze</label>
+        </div>
+        <div id="emoji" class="w-24 mt-2.5 sm:mt-0 text-3xl flex items-center justify-center select-text">❔</div>
       </div>
-      <div class="flex mt-2.5">
-        <button type="submit" onclick="analyzeText()" class="text-sm px-5 py-2.5 w-full font-medium text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 rounded-lg">Analyze</button>
-        <div id="emoji" class="size-12 flex items-center justify-center select-text">?</div>
-      </div>
+      <button type="submit" onclick="analyzeText()" class="text-sm mt-2.5 px-5 py-2.5 w-full font-medium text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 rounded-lg">Analyze</button>
       <div id="error" class="mt-2.5 text-center text-xs text-red-500 invisible">AWS for Data Scientist</div>
     </div>
     <p class="absolute right-1 bottom-1 text-xs font-thin text-gray-300 dark:text-gray-600">&copy; Swastik Kulshreshtha</p>
 
     <script>
-      const loadingSVG = `<svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z" class="icon-loading"/></svg>`;
-      const emojiElement = document.getElementById("emoji"), textElement = document.getElementById("text"), errorElement = document.getElementById("error");
+      const emojiElement = document.getElementById("emoji"), textElement = document.getElementById("text"), errorElement = document.getElementById("error"), faviconElement = document.querySelector("head > link[rel='icon']");
+      let isProcessing = false, remTimeout = 0, lastEmoji = "❔";
+
+      const showLoadingIcon = () => { emojiElement.innerHTML = LOADING_SVG };
+      const setEmoji = (emoji="❔") => {
+        if (emoji == lastEmoji) return;
+        emojiElement.innerHTML = emoji;
+        faviconElement.setAttribute("href", faviconTemplate(emoji));
+        lastEmoji = emoji;
+      };
+      const resetEmoji = () => {
+        if (!isProcessing) setEmoji();
+        hideError();
+      };
+      const showError = (text="An Error occurred") => {
+        errorElement.innerText = text;
+        errorElement.classList.remove("invisible");
+      };
+      const hideError = () => errorElement.classList.add("invisible");
+      const isErrorHidden = () => errorElement.classList.contains("invisible");
+
       function analyzeText() {
-        const text = textElement.value.trim();
-        if (text.length < 3) {
-          errorElement.innerText = "At least enter 3 letters"
-          errorElement.classList.remove("invisible");
+        if (isProcessing) {
+          showError("Previous Text is being Processed");
+          return;
+        } else if (remTimeout > 0) {
+          if (isErrorHidden())
+            setTimeout(hideError, remTimeout);
+          showError(`Wait for ${Math.round(remTimeout / 1000)} seconds before trying again`);
           return;
         }
 
-        errorElement.classList.add("invisible");
-        emojiElement.innerHTML = loadingSVG;
+        const text = textElement.value.trim();
+        if (text.length < 3) {
+          showError("At least enter 3 letters");
+          return;
+        }
+
+        hideError();
         getEmoji(text);
       }
 
-      const API_ENDPOINT = "http://localhost:9000";
       function getEmoji(text) {
         const reqURL = new URL(API_ENDPOINT);
         reqURL.searchParams.append("text", text);
 
+        isProcessing = true;
+        showLoadingIcon();
+
         const xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4) {
-            if (this.status == 200 && this.responseType == "json" && this.response.status == "success") {
-              errorElement.classList.add("invisible");
-              emojiElement.innerHTML = this.response.data;
+            const res = JSON.parse(this.response);
+            if (this.status == 200 && typeof res == "object" && res.status == "success") {
+              hideError();
+              setEmoji(res.data);
             } else {
-              emojiElement.innerHTML = "⚠️";
-              errorElement.innerText = "An Error occurred while processing the Request";
-              errorElement.classList.remove("invisible");
+              showError("An Error occurred while processing the Request");
+              setEmoji("⚠️");
             }
+            isProcessing = false;
+            remTimeout = MAX_TIMEOUT;
           }
         };
         xhttp.open("GET", reqURL, true);
         xhttp.send();
       }
+
+      setInterval(() => {
+        if (remTimeout > 0)
+          remTimeout -= 1000;
+      }, 1000);
     </script>
   </body>
 </html>
