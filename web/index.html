@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sentiment Analysis with Emojis</title>
+    <title>Emoji Responder</title>
     <link href="tw_styles.css" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❔</text></svg>">
     <script>
@@ -15,7 +15,7 @@
   </head>
   <body class="text-gray-900 dark:text-white bg-white dark:bg-gray-900 select-none">
     <div class="w-[90vw] max-w-screen-md">
-      <h1 class="text-center text-xl mb-5 font-semibold">Sentiment Analysis with Emojis</h1>
+      <h1 class="text-center text-xl mb-5 font-semibold">Emoji Responder</h1>
       <div class="flex items-center justify-center flex-col sm:flex-row">
         <div class="relative w-full">
           <textarea id="text" oninput="resetEmoji()" class="block select-text px-2.5 pb-2.5 pt-4 w-full min-h-24 max-h-[60vh] text-sm rounded-lg border-1 border-gray-300 appearance-none dark:border-gray-600 focus:border-blue-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer" minlength="3" maxlength="50" placeholder=" "></textarea>
@@ -23,10 +23,12 @@
         </div>
         <div id="emoji" class="w-24 mt-2.5 sm:mt-0 text-3xl flex items-center justify-center select-text">❔</div>
       </div>
-      <button type="submit" onclick="analyzeText()" class="text-sm mt-2.5 px-5 py-2.5 w-full font-medium text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 rounded-lg">Analyze</button>
+      <button type="submit" onclick="analyzeText()" class="text-sm mt-2.5 px-5 py-2.5 w-full font-medium text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 rounded-lg">Respond</button>
       <div id="error" class="mt-2.5 text-center text-xs text-red-500 invisible">AWS for Data Scientist</div>
     </div>
-    <p class="absolute right-1 bottom-1 text-xs font-thin text-gray-300 dark:text-gray-600">&copy; Swastik Kulshreshtha</p>
+    <a href="http://github.com/Swastik2442/emojiResponder" target="_blank" class="group">
+      <p class="absolute right-1 bottom-1 text-xs font-thin text-gray-300 dark:text-gray-600 group-hover:text-blue-400">&copy; Swastik Kulshreshtha</p>
+    </a>
 
     <script>
       const emojiElement = document.getElementById("emoji"), textElement = document.getElementById("text"), errorElement = document.getElementById("error"), faviconElement = document.querySelector("head > link[rel='icon']");
