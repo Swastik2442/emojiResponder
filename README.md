@@ -10,7 +10,7 @@ Access the **Jupyter Notebook** used in this project on [Google Colab](https://c
 
 Training Data is of the Form (Text, Emoji ID). Text Embedding are extracted from the [GloVe](https://nlp.stanford.edu/projects/glove/) Pre-trained Word Vector (*glove.6B.50d*) and for each input Text, the input example becomes the Embedding of each Word in the Text.
 
-The Input is split into Train, Test & Validate Sets and is used to train a Neural Network with Tensorflow. The Network outputs the predicted Emojis' Probabilities and the Emoji with the best Probability is checked against the actual Emoji.
+The Input is split into Train, Test & Validate Sets and is used to train a Neural Network with Keras. The Network outputs the predicted Emojis' Probabilities and the Emoji with the best Probability is checked against the actual Emoji.
 
 ## Infrastructure
 
